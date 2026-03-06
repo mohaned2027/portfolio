@@ -42,6 +42,12 @@ export const API_CONTACT_LIST = `${BASE_URL}/admin/contact-us`;
 export const API_CONTACT_READ = `${BASE_URL}/admin/contact-us/read`;
 export const API_CONTACT_DELETE = `${BASE_URL}/admin/contact-us/delete`;
 export const API_CONTACT_REPLY = `${BASE_URL}/admin/contact-us/reply`;
+export const API_CONTACT_CREATE = `${BASE_URL}/admin/contact-us/create`;
+
+// Helper function to build dynamic endpoints
+export const getContactReadEndpoint = (id) => `${API_CONTACT_READ}/${id}`;
+export const getContactDeleteEndpoint = (id) => `${API_CONTACT_DELETE}/${id}`;
+export const getContactReplyEndpoint = (id) => `${API_CONTACT_REPLY}/${id}`;
 
 // Services Endpoints
 export const API_SERVICES = `${BASE_URL}/services`;

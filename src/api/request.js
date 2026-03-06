@@ -181,6 +181,27 @@ export const apiFetch = async (endpoint, method = 'GET', body = null) => {
         };
       }
       
+      // Handle Create Mail (new conversation)
+      if (endpoint.includes('/contact-us/create')) {
+        return {
+          status: 200,
+          message: 'Mail created successfully',
+          data: {
+            id: Math.floor(Math.random() * 1000),
+            contact_id: Math.floor(Math.random() * 100),
+            name: 'Admin',
+            email: body.email || 'admin@example.com',
+            subject: body.subject || 'New Message',
+            role: 'admin',
+            message: body.message || '',
+            file_path: null,
+            file_name: null,
+            created_at: new Date().toISOString(),
+            updated_at: null
+          }
+        };
+      }
+      
       return { 
         success: true, 
         message: 'Operation completed successfully',
