@@ -52,7 +52,7 @@ export const isAuthenticated = () => {
 /**
  * Main API Fetch Wrapper
  * @param {string} endpoint - API endpoint (e.g., '/profile', '/resume')
- * @param {string} method - HTTP method (GET, POST, PUT, DELETE)
+ * @param {string} method - HTTP method (GET, POST, PUT, DELETE, PATCH)
  * @param {object|FormData} body - Request body
  * @returns {Promise} - Response data
  */
@@ -90,6 +90,42 @@ export const apiFetch = async (endpoint, method = 'GET', body = null) => {
 
     // Handle GET requests
     if (method === 'GET') {
+      // Handle Contact Us List
+      if (endpoint.includes('/admin/contact-us')) {
+        return {
+          status: 200,
+          message: 'Messages retrieved successfully',
+          data: {
+            messages: [
+              {
+                id: 1,
+                contact_id: 1,
+                name: 'John Doe',
+                email: 'john@example.com',
+                subject: 'Project Inquiry',
+                role: 'user',
+                message: 'I am interested in your services for my project.',
+                is_read: false,
+                created_at: new Date(Date.now() - 86400000).toISOString(),
+                updated_at: null
+              },
+              {
+                id: 2,
+                contact_id: 2,
+                name: 'Jane Smith',
+                email: 'jane@example.com',
+                subject: 'Collaboration',
+                role: 'user',
+                message: 'Would you be interested in collaborating on a new venture?',
+                is_read: true,
+                created_at: new Date(Date.now() - 172800000).toISOString(),
+                updated_at: null
+              }
+            ]
+          }
+        };
+      }
+      
       // Find matching mock data
       for (const [path, data] of Object.entries(mockDataMap)) {
         if (endpoint.includes(path)) {
@@ -102,10 +138,84 @@ export const apiFetch = async (endpoint, method = 'GET', body = null) => {
     // Handle POST/PUT requests (Create/Update)
     if (method === 'POST' || method === 'PUT') {
       console.log(`[Mock API] ${method} to ${endpoint}:`, body);
+      
+      // Handle Contact Us Store
+      if (endpoint.includes('/contact-us/store')) {
+        return {
+          status: 200,
+          message: 'Message sent successfully',
+          data: {
+            id: Math.floor(Math.random() * 1000),
+            contact_id: Math.floor(Math.random() * 100),
+            name: body.name,
+            email: body.email,
+            subject: body.subject,
+            role: 'user',
+            message: body.message,
+            is_read: false,
+            created_at: new Date().toISOString(),
+            updated_at: null
+          }
+        };
+      }
+      
+      // Handle Contact Us Reply
+      if (endpoint.includes('/contact-us/reply')) {
+        const msg = body instanceof FormData ? body.get('message') : body.message;
+        return {
+          status: 200,
+          message: 'Reply sent successfully',
+          data: {
+            id: Math.floor(Math.random() * 1000),
+            contact_id: Math.floor(Math.random() * 100),
+            name: 'Admin',
+            email: 'admin@example.com',
+            subject: 'Re: Your Message',
+            role: 'admin',
+            message: msg,
+            file_path: null,
+            file_name: null,
+            created_at: new Date().toISOString(),
+            updated_at: null
+          }
+        };
+      }
+      
       return { 
         success: true, 
         message: 'Operation completed successfully',
         data: body 
+      };
+    }
+
+    // Handle PATCH requests
+    if (method === 'PATCH') {
+      console.log(`[Mock API] PATCH ${endpoint}:`, body);
+      
+      // Handle Mark as Read
+      if (endpoint.includes('/contact-us/read/')) {
+        return {
+          status: 200,
+          message: 'Message marked as read',
+          data: {
+            id: Math.floor(Math.random() * 1000),
+            contact_id: Math.floor(Math.random() * 100),
+            name: 'John Doe',
+            email: 'john@example.com',
+            subject: 'Project Inquiry',
+            role: 'user',
+            message: 'I am interested in your services.',
+            is_read: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        };
+      }
+      
+      return {
+        status: 200,
+        message: 'Operation completed successfully',
+        data: body
       };
     }
 
@@ -171,10 +281,22 @@ export const apiGet = (endpoint) => apiFetch(endpoint, 'GET');
 export const apiPost = (endpoint, body) => apiFetch(endpoint, 'POST', body);
 export const apiPut = (endpoint, body) => apiFetch(endpoint, 'PUT', body);
 export const apiDelete = (endpoint) => apiFetch(endpoint, 'DELETE');
+export const apiPatch = (endpoint, body) => apiFetch(endpoint, 'PATCH', body);
 
 // File upload helper
 export const apiUpload = async (endpoint, file, fieldName = 'file') => {
   const formData = new FormData();
   formData.append(fieldName, file);
+  return apiFetch(endpoint, 'POST', formData);
+};
+
+// Multipart form data helper for Contact Us Reply
+export const apiMultipart = async (endpoint, data) => {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== null && value !== undefined) {
+      formData.append(key, value);
+    }
+  }
   return apiFetch(endpoint, 'POST', formData);
 };

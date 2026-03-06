@@ -31,10 +31,17 @@ export const API_BLOG_CREATE = `${BASE_URL}/blog/create`;
 export const API_BLOG_UPDATE = `${BASE_URL}/blog/update`;
 export const API_BLOG_DELETE = `${BASE_URL}/blog/delete`;
 
-// Messages/Contact Endpoints
+// Messages/Contact Endpoints (Legacy)
 export const API_MESSAGES = `${BASE_URL}/messages`;
 export const API_MESSAGES_READ = `${BASE_URL}/messages/read`;
 export const API_MESSAGES_DELETE = `${BASE_URL}/messages/delete`;
+
+// Contact Us Endpoints (New)
+export const API_CONTACT_STORE = `${BASE_URL}/contact-us/store`;
+export const API_CONTACT_LIST = `${BASE_URL}/admin/contact-us`;
+export const API_CONTACT_READ = `${BASE_URL}/admin/contact-us/read`;
+export const API_CONTACT_DELETE = `${BASE_URL}/admin/contact-us/delete`;
+export const API_CONTACT_REPLY = `${BASE_URL}/admin/contact-us/reply`;
 
 // Services Endpoints
 export const API_SERVICES = `${BASE_URL}/services`;
