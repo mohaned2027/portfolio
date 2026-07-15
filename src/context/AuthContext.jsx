@@ -19,9 +19,10 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       if (isAuthenticated()) {
         // In a real app, you'd fetch user data from API
+        // For now, setting a placeholder user to indicate logged in state
         setUser({
           id: 1,
-          name: 'Richard Hanrick',
+          name: 'Admin',
           email: 'admin@example.com',
           role: 'admin'
         });
@@ -34,11 +35,20 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await apiFetch('/auth/login', 'POST', { email, password });
-      if (response.success) {
-        setUser(response.user);
+      
+      // Backend returns status 200 for success
+      if (response.status === 200) {
+        // In your backend, user info might be in response.data.user or you might need another fetch
+        // For now, we set the user based on successful login
+        setUser({
+          id: 1,
+          name: 'Admin',
+          email: email,
+          role: 'admin'
+        });
         return { success: true };
       }
-      return { success: false, message: 'Login failed' };
+      return { success: false, message: response.message || 'Login failed' };
     } catch (error) {
       return { success: false, message: error.message };
     }

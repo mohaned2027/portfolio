@@ -1,6 +1,6 @@
 // API Request Wrapper with Mock Data Support
 // Toggle this flag to switch between mock and real API
-export const MOCK_MODE = true;
+export const MOCK_MODE = false;
 
 // Import mock data
 import profileData from './mockData/profile.json';
@@ -288,6 +288,11 @@ export const apiFetch = async (endpoint, method = 'GET', body = null) => {
 
     if (!response.ok) {
       throw new Error(data.message || 'Something went wrong');
+    }
+
+    // Automatically set token if present in login response
+    if (endpoint.includes('/auth/login') && data.data && data.data.token) {
+      setAuthToken(data.data.token);
     }
 
     return data;
